@@ -1,8 +1,9 @@
 import { Router } from 'express'
-import { testTicketEndpoint } from './controllers/tickets.ts'
+import { getEventById, getEvents } from './controllers/event.controller.ts'
 
 const router = Router()
 
-router.get('/tickets', testTicketEndpoint)
+router.get('/events', getEvents)
+router.get('/events/:id', getEventById)
 
 export default router
