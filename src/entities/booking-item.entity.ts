@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Unique,
+  Index,
 } from 'typeorm'
 import { BookingEntity } from './booking.entity.ts'
 import { TicketTierEntity } from './ticket-tier.entity.ts'
@@ -17,6 +18,7 @@ export class BookingItemEntity {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Index()
   @Column({ type: 'integer' })
   bookingId: number
 
@@ -24,6 +26,7 @@ export class BookingItemEntity {
   @JoinColumn({ name: 'bookingId' })
   booking: BookingEntity
 
+  @Index()
   @Column({ type: 'integer' })
   tierId: number
 

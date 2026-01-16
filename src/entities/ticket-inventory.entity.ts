@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   VersionColumn,
   Check,
+  Index,
 } from 'typeorm'
 import { TicketTierEntity } from './ticket-tier.entity.ts'
 
@@ -19,6 +20,7 @@ export class TicketInventoryEntity {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Index()
   @Column({ type: 'integer' })
   tierId: number
 

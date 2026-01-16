@@ -1,10 +1,18 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Index,
+} from 'typeorm'
 
 @Entity('events')
 export class EventEntity {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Index()
   @Column({ type: 'integer' })
   userId: number
 

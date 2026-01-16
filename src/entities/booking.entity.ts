@@ -8,6 +8,7 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  Index,
 } from 'typeorm'
 import { EventEntity } from './event.entity.ts'
 import { BookingItemEntity } from './booking-item.entity.ts'
@@ -18,6 +19,7 @@ export class BookingEntity {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Index()
   @Column({ type: 'integer' })
   eventId: number
 
@@ -25,6 +27,7 @@ export class BookingEntity {
   @JoinColumn({ name: 'eventId' })
   event: EventEntity
 
+  @Index()
   @Column({ type: 'integer' })
   userId: number
 

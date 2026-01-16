@@ -6,6 +6,7 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  Index,
 } from 'typeorm'
 import { BookingEntity } from './booking.entity.ts'
 
@@ -14,6 +15,7 @@ export class PaymentEntity {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Index()
   @Column({ type: 'integer' })
   bookingId: number
 

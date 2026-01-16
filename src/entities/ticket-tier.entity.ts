@@ -7,15 +7,17 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Unique,
+  Index,
 } from 'typeorm'
 import { EventEntity } from './event.entity.ts'
 
 @Entity('ticket_tiers')
-@Unique(['eventId', 'name'])
+@Unique(['eventId', 'code'])
 export class TicketTierEntity {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Index()
   @Column({ type: 'integer' })
   eventId: number
 
@@ -24,7 +26,10 @@ export class TicketTierEntity {
   event: EventEntity
 
   @Column({ type: 'text' })
-  name: string
+  code: string
+
+  @Column({ type: 'text' })
+  displayName: string
 
   @Column({ type: 'integer' })
   priceCents: number
@@ -32,6 +37,7 @@ export class TicketTierEntity {
   @Column({ type: 'integer', default: 0 })
   displayOrder: number
 
+  @Index()
   @Column({ type: 'boolean', default: true })
   isActive: boolean
 
