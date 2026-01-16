@@ -6,6 +6,7 @@ import { TicketTierEntity } from '../entities/ticket-tier.entity.ts'
 import { BookingItemEntity } from '../entities/booking-item.entity.ts'
 import type { CreateBookingBody, PaymentCreateInput } from '../types.ts'
 import { processPayment } from '../services/payment.js'
+import { In } from 'typeorm'
 
 export const createBooking = async (
   req: Request<Record<string, never>, unknown, CreateBookingBody>,
@@ -29,6 +30,10 @@ export const createBooking = async (
     return res.status(400).json({ message: 'Missing required fields' })
   }
 
+  if (quantity < 1) {
+    return res.status(400).json({ message: 'Quantity must be at least 1' })
+  }
+
   const queryRunner = AppDataSource.createQueryRunner()
   await queryRunner.connect()
   await queryRunner.startTransaction()
@@ -40,6 +45,11 @@ export const createBooking = async (
     })
     if (existingBooking) {
       return res.json(existingBooking)
+    }
+
+    const tier = await queryRunner.manager.findOne(TicketTierEntity, { where: { id: tierId } })
+    if (!tier) {
+      return res.status(404).json({ message: 'Ticket tier not found' })
     }
 
     const inventory = await queryRunner.manager
@@ -63,10 +73,6 @@ export const createBooking = async (
     inventory.reservedQuantity += quantity
     await queryRunner.manager.save(inventory)
 
-    const tier = await queryRunner.manager.findOne(TicketTierEntity, { where: { id: tierId } })
-    if (!tier) {
-      return res.status(404).json({ message: 'Ticket tier not found' })
-    }
     const totalAmountCents = tier.priceCents * quantity
 
     const booking = queryRunner.manager.getRepository(BookingEntity).create({
@@ -111,7 +117,29 @@ export const createBooking = async (
       relations: ['bookingItems'],
     })
 
-    return res.status(201).json({ booking: fullBooking, payment: paymentEntity })
+    const tiers = await queryRunner.manager.find(TicketTierEntity, {
+      where: { eventId: tier.eventId },
+    })
+    const inventoryRepo = AppDataSource.getRepository(TicketInventoryEntity)
+    const inventoryList = await inventoryRepo.findBy({
+      tierId: In(tiers.map((t) => t.id)),
+    })
+    const tiersWithAvailability = tiers.map((t) => {
+      const inv = inventoryList.find((i) => i.tierId === t.id)
+      return {
+        id: t.id,
+        code: t.code,
+        displayName: t.displayName,
+        priceCents: t.priceCents,
+        availableQuantity: inv ? inv.availableQuantity : 0,
+      }
+    })
+
+    return res.status(201).json({
+      booking: fullBooking,
+      payment: paymentEntity,
+      tiers: tiersWithAvailability,
+    })
   } catch (error) {
     const e = error as Error
     await queryRunner.rollbackTransaction()
