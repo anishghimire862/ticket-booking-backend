@@ -14,4 +14,6 @@ export const config = {
   DB_PASSWORD: requireEnv('DB_PASSWORD'),
   DB_NAME: requireEnv('DB_NAME'),
   DB_SSL: process.env.DB_SSL === 'true',
+
+  FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:5173',
 }
