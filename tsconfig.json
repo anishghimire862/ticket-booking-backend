@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./dist",
+    "rootDir": "src",
+    "outDir": "dist",
     "allowImportingTsExtensions": true,
+    "emitDeclarationOnly": true,
 
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
@@ -24,5 +25,9 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
   }
 }
