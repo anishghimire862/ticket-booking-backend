@@ -113,6 +113,8 @@ the assignment for the ticket booking system.
     focuses on single-event booking for simplicity, the data model allows easy extension to handle multiple events 
     concurrently without major changes to the booking logic.
 
+**NOTE:** We could refactor some of the repeated code used in the payment processing and event listing parts. The status messages could also be refactored into constants and reused. Additionally, the database logic could be moved into dedicated services instead of being handled in the controllers. These improvements were left as is due to time constraints.
+
 ## Concurrency & Consistency (Preventing Double-Booking)
 
 To ensure that two users cannot book the same ticket at the same time, the following measures are implemented:
